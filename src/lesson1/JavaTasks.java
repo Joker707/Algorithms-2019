@@ -101,7 +101,7 @@ public class JavaTasks {
      * 99.5
      * 121.3
      */
-    static public void sortTemperatures(String inputName, String outputName) {
+    static public void sortTemperatures(String inputName, String outputName) { // сортировка подсчетом O(n)
         int[] numCounts = new int[7731];
         int[] outputArray = new int[0];
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputName))) {
@@ -184,7 +184,7 @@ public class JavaTasks {
      * 2
      * 2
      */
-    static public void sortSequence(String inputName, String outputName) {
+    static public void sortSequence(String inputName, String outputName) { // решил с помощью задумки сортировки подсчетом со сложностью O(n)
         int maxNumber = 0;
         int maxNumberName = 0;
         int maxNumberCounter = 0;

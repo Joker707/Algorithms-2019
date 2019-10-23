@@ -92,7 +92,8 @@ public class JavaAlgorithms {
      * Общий комментарий: решение из Википедии для этой задачи принимается,
      * но приветствуется попытка решить её самостоятельно.
      */
-    static public int josephTask(int menNumber, int choiceInterval) {
+    static public int josephTask(int menNumber, int choiceInterval) { // Закоментированная часть - моя тщетная попытка сделать некостыльный нормальный алгоритм))))0
+        // После решил воспользоваться помощью интернетов И сдеалал со сложностью O(n)
 //        if (menNumber == 1) {
 //            return 1;
 //        }
@@ -168,7 +169,7 @@ public class JavaAlgorithms {
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
      */
-    static public String longestCommonSubstring(String first, String second) {
+    static public String longestCommonSubstring(String first, String second) { //O(first^2)
         String minString;
         String otherString;
 //        if (first.length() < second.length()) {
@@ -207,7 +208,7 @@ public class JavaAlgorithms {
      * Справка: простым считается число, которое делится нацело только на 1 и на себя.
      * Единица простым числом не считается.
      */
-    static public int calcPrimesNumber(int limit) {
+    static public int calcPrimesNumber(int limit) { // O(n^(3/2))
         if (limit <= 1) {
             return 0;
         }
@@ -260,7 +261,7 @@ public class JavaAlgorithms {
      * В файле буквы разделены пробелами, строки -- переносами строк.
      * Остальные символы ни в файле, ни в словах не допускаются.
      */
-    static public Set<String> baldaSearcher(String inputName, Set<String> words)  {
+    static public Set<String> baldaSearcher(String inputName, Set<String> words)  { // O(n^3)
         Set<String> foundedWords = new HashSet<>();
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(inputName), StandardCharsets.UTF_8));
