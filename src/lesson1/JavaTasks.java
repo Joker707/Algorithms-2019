@@ -2,6 +2,9 @@ package lesson1;
 
 import kotlin.NotImplementedError;
 
+import java.io.*;
+import java.util.ArrayList;
+
 @SuppressWarnings("unused")
 public class JavaTasks {
     /**
@@ -99,7 +102,57 @@ public class JavaTasks {
      * 121.3
      */
     static public void sortTemperatures(String inputName, String outputName) {
-        throw new NotImplementedError();
+        int[] numCounts = new int[7731];
+        int[] outputArray = new int[0];
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputName))) {
+            ArrayList<Integer> inputTemperatures = new ArrayList<>();
+            String string;
+            while ((string = bufferedReader.readLine()) != null) {
+                if (Double.parseDouble(string) < -273.0
+                        || Double.parseDouble(string) > 500.0) {
+                    throw new IllegalArgumentException();
+                }
+                inputTemperatures.add((int)(Double.parseDouble(string) * 10));
+            }
+            int[] inputArray = new int[inputTemperatures.size()];
+            for (int i = 0; i < inputTemperatures.size(); i++) {
+                inputArray[i] = inputTemperatures.get(i);
+            }
+            for (int i = 0; i < inputArray.length; i++) {
+                numCounts[inputArray[i] + 2730]++;
+//                you should finish this method with int instead of double
+//                you ain't got time!!!!!!!!!!
+            }
+//            for (int j = 1; j < 7731; j++) {
+//                count[j] = count[j] + count[j - 1];
+//            }
+            outputArray = new int[inputArray.length];
+            int currentSortedIndex = 0;
+//            for (int i = inputTemperatures.size() - 1; i > 0; i--) {
+//                count[inputTemperatures.get(i) + 2730] = count[inputTemperatures.get(i) + 2730] - 1;
+//                outputArray[count[inputTemperatures.get(i) + 2730]] = inputTemperatures.get(i) + 2730;
+//            }
+            for (int n = 0; n < numCounts.length; n++) {
+                int count = numCounts[n];
+                for (int k = 0; k < count; k++) {
+                    outputArray[currentSortedIndex] = n - 2730;
+                    currentSortedIndex++;
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            FileWriter fileWriter = new FileWriter(outputName, false);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            for (int i = 0; i < outputArray.length; i++) {
+                bufferedWriter.write((double)outputArray[i] / 10.0 + "\n");
+            }
+            bufferedWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -132,7 +185,54 @@ public class JavaTasks {
      * 2
      */
     static public void sortSequence(String inputName, String outputName) {
-        throw new NotImplementedError();
+        int maxNumber = 0;
+        int maxNumberName = 0;
+        int maxNumberCounter = 0;
+        int[] outputArray = new int[0];
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(inputName));
+            ArrayList<Integer> inputNumbers = new ArrayList<>();
+            String string;
+            while ((string = bufferedReader.readLine()) != null) {
+                inputNumbers.add(Integer.parseInt(string));
+                if (Integer.parseInt(string) > maxNumber) {
+                    maxNumber = Integer.parseInt(string);
+                }
+            }
+            int[] numCounts = new int[maxNumber + 1];
+            for (int i = 0; i < inputNumbers.size(); i++) {
+                numCounts[inputNumbers.get(i)]++;
+            }
+            for (int j = 0; j < maxNumber; j++) {
+                if (numCounts[j + 1] > maxNumberCounter) {
+                    maxNumberCounter = numCounts[j + 1];
+                    maxNumberName = j + 1;
+                }
+            }
+            outputArray = new int[inputNumbers.size()];
+            int index = 0;
+            for (int k = 0; k < inputNumbers.size(); k++) {
+                if (inputNumbers.get(k) != maxNumberName) {
+                    outputArray[index] = inputNumbers.get(k);
+                    index++;
+                }
+            }
+            for (int n = inputNumbers.size() - maxNumberCounter; n < inputNumbers.size(); n++) {
+                outputArray[n] = maxNumberName;
+            }
+        }  catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            FileWriter fileWriter = new FileWriter(outputName, false);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            for (int i = 0; i < outputArray.length; i++) {
+                bufferedWriter.write(outputArray[i] + "\n");
+            }
+            bufferedWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
