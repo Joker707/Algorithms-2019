@@ -3,7 +3,15 @@ package lesson2;
 import kotlin.NotImplementedError;
 import kotlin.Pair;
 
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
+
+
+import static java.lang.Math.round;
+import static java.lang.Math.sqrt;
 
 @SuppressWarnings("unused")
 public class JavaAlgorithms {
@@ -31,8 +39,31 @@ public class JavaAlgorithms {
      *
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-    static public Pair<Integer, Integer> optimizeBuyAndSell(String inputName) {
-        throw new NotImplementedError();
+    static public Pair<Integer, Integer> optimizeBuyAndSell(String inputName) throws IOException {
+        Scanner scanner = new Scanner(new File(inputName));
+
+        ArrayList<Integer> list = new ArrayList<>();
+
+        while (scanner.hasNext()) {
+            list.add(scanner.nextInt());
+        }
+
+        int first = 0;
+        int second = 0;
+//        System.out.println(list.toString());
+
+        int max = 0;
+
+        for (int i = 0; i < list.size(); i++) {
+            for (int j = i + 1; j < list.size(); j++) {
+                if (list.get(j) - list.get(i) > max) {
+                    max = list.get(j) - list.get(i);
+                    first = i;
+                    second = j;
+                }
+            }
+        }
+        return new Pair(first + 1, second + 1);
     }
 
     /**
@@ -85,8 +116,60 @@ public class JavaAlgorithms {
      * но приветствуется попытка решить её самостоятельно.
      */
     static public int josephTask(int menNumber, int choiceInterval) {
-        throw new NotImplementedError();
+        if (menNumber == 1) {
+            return 1;
+        }
+
+        if (choiceInterval == 1) {
+            return menNumber;
+        }
+
+        int deleteNumberCorrection = 0;
+        int[] array = new int[menNumber];
+
+        for (int i = 0; i < menNumber; i++) {
+            array[i] += i + 1;
+        }
+
+        array[choiceInterval - 1] = 0;
+        int deleteNumber = choiceInterval;
+
+        int count = 1;
+
+        for (int i = 1; i < menNumber - 1; i++) {
+
+            while (count != choiceInterval) {
+                if (array[deleteNumber] != 0) {
+                    count++;
+                    deleteNumber++;
+                } else {
+                    deleteNumber++;
+                }
+                deleteNumber %= menNumber;
+            }
+            if (deleteNumber - deleteNumberCorrection == -1) {
+                array[menNumber - 1] = 0;
+            } else {
+                array[deleteNumber - deleteNumberCorrection] = 0;
+            }
+
+            if (array[(deleteNumber - deleteNumberCorrection + 1) % menNumber ] == 0 ||
+                    array[(deleteNumber - deleteNumberCorrection + choiceInterval) % menNumber ] == 0) {
+                count = 0;
+                deleteNumberCorrection = 1;
+            } else {
+                count = 1;
+                deleteNumberCorrection = 0;
+            }
+        }
+        for (int number : array) {
+            if (number != 0) {
+                return number;
+            }
+        }
+        return 0;
     }
+
 
     /**
      * Наибольшая общая подстрока.
@@ -114,7 +197,31 @@ public class JavaAlgorithms {
      * Единица простым числом не считается.
      */
     static public int calcPrimesNumber(int limit) {
-        throw new NotImplementedError();
+
+        if (limit <= 1) {
+            return 0;
+        }
+        if (limit == 2) {
+            return 1;
+        }
+
+        int count = 1;
+
+        for (int i = 3; i < limit; i += 2) {
+            if (isPrime(i)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private static boolean isPrime(int number) {
+        for (int i = 3; i <= sqrt(number); i += 2) {
+            if (number % i == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -143,7 +250,16 @@ public class JavaAlgorithms {
      * В файле буквы разделены пробелами, строки -- переносами строк.
      * Остальные символы ни в файле, ни в словах не допускаются.
      */
-    static public Set<String> baldaSearcher(String inputName, Set<String> words) {
-        throw new NotImplementedError();
+    static public Set<String> baldaSearcher(String inputName, Set<String> words) throws FileNotFoundException {
+        Set<String> foundedWords = new HashSet<>();
+        Scanner scanner = new Scanner(new File(inputName));
+        while (scanner.hasNext()) {
+
+        }
+        int strings = 0;
+        int columns = 0;
+
+        char[][] letters = new char[strings][columns];
+        return null;
     }
 }
