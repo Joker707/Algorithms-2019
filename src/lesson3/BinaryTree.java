@@ -1,6 +1,7 @@
 package lesson3;
 
 import kotlin.NotImplementedError;
+import kotlin.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +16,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         Node<T> left = null;
 
         Node<T> right = null;
+
 
         Node(T value) {
             this.value = value;
@@ -72,11 +74,164 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      * Удаление элемента в дереве
      * Средняя
      */
+    //Затраты по памяти-O(1)
+    //Трудоёмкость-O(высота дерева)
     @Override
     public boolean remove(Object o) {
-        // TODO
-        throw new NotImplementedError();
+        @SuppressWarnings("unchecked")
+        T t = (T) o;
+        Pair<Node<T>, Node<T>> pairOfNodes = findWithParent(t);
+        Node<T> currentNode;
+        Node<T> parent;
+        int comparison;
+        if (pairOfNodes != null) {
+            currentNode = pairOfNodes.component1();
+            parent = pairOfNodes.component2();
+
+        } else {
+            return false;
+        }
+        if (root == null) {
+            return false;
+        }
+        if (parent == null) {
+            if (currentNode.left == null && currentNode.right == null) {
+                root = null;
+                size--;
+                return true;
+            } else if (currentNode.left != null && currentNode.right == null) {
+                root = currentNode.left;
+                size--;
+                return true;
+            } else if (currentNode.left == null) {
+                root = currentNode.right;
+                size--;
+                return true;
+            } else {
+                Pair<Node<T>, Node<T>> minPair = findWithParent(minNode(currentNode.right).value);
+                Node<T> minNode = minPair.component1();
+                Node<T> minParent = minPair.component2();
+                if (minNode == currentNode.right) {
+                    minNode.left = root.left;
+                    root = minNode;
+                } else {
+                    if (minNode.right != null) {
+                        minParent.left = minNode.right;
+                    } else {
+                        minParent.left = null;
+                    }
+                    minNode.left = root.left;
+                    root = minNode;
+                    root.right = currentNode.right;
+                }
+                size--;
+                return true;
+            }
+        } else {
+            comparison = currentNode.value.compareTo(parent.value);
+            if (currentNode.left == null && currentNode.right == null) {
+                if (comparison > 0) {
+                    parent.right = null;
+                } else {
+                    parent.left = null;
+                }
+                size--;
+                return true;
+            } else if (currentNode.left != null && currentNode.right == null) {
+                if (comparison > 0) {
+                    parent.right = currentNode.left;
+                } else {
+                    parent.left = currentNode.left;
+                }
+                size--;
+                return true;
+            } else if (currentNode.left == null) {
+                if (comparison > 0) {
+                    parent.right = currentNode.right;
+                } else {
+                    parent.left = currentNode.right;
+                }
+                size--;
+                return true;
+            } else {
+                Pair<Node<T>, Node<T>> minPair = findWithParent(minNode(currentNode.right).value);
+                Node<T> minNode = minPair.component1();
+                Node<T> minParent = minPair.component2();
+                if (minNode == currentNode.right) {
+                    if (comparison < 0) {
+                        minNode.left = currentNode.left;
+                        parent.left = minNode;
+                    } else {
+                        minNode.left = currentNode.left;
+                        parent.right = minNode;
+                    }
+                    size--;
+                    return true;
+                } else {
+                    if (minNode.right != null) {
+                        minParent.left = minNode.right;
+                    } else {
+                        minParent.left = null;
+                    }
+                    if (comparison < 0) {
+                        parent.left = minNode;
+                        parent.left.right = currentNode.right;
+                        parent.left.left = currentNode.left;
+                        size--;
+                        return true;
+                    } else {
+                        parent.right = minNode;
+                        parent.right.right = currentNode.right;
+                        parent.right.left = currentNode.left;
+                        size--;
+                        return true;
+                    }
+                }
+            }
+        }
     }
+
+
+    private Pair<Node<T>, Node<T>> findWithParent(T value) {
+        Node<T> node = find(value);
+        if (node == root) {
+            return new Pair<>(node, null);
+        }
+        Node<T> currentNode = root;
+        Node<T> parent = currentNode;
+        int comparison = value.compareTo(currentNode.value);
+        while (comparison != 0) {
+            if (comparison < 0) {
+                if (currentNode.left != null) {
+                    parent = currentNode;
+                    currentNode = currentNode.left;
+                    comparison = value.compareTo(currentNode.value);
+                } else {
+                    return null;
+                }
+            } else {
+                if (currentNode.right != null) {
+                    parent = currentNode;
+                    currentNode = currentNode.right;
+                    comparison = value.compareTo(currentNode.value);
+                } else {
+                    return null;
+                }
+            }
+        }
+        return new Pair<>(currentNode, parent);
+    }
+
+
+
+    private Node<T> minNode(Node<T> currentNode) {
+        while (currentNode.left != null) {
+            currentNode = currentNode.left;
+        }
+        return currentNode;
+    }
+
+
 
     @Override
     public boolean contains(Object o) {
@@ -107,39 +262,58 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     }
 
     public class BinaryTreeIterator implements Iterator<T> {
+        Stack<Node> stack;
+        T result = null;
 
         private BinaryTreeIterator() {
-            // Добавьте сюда инициализацию, если она необходима
+            stack = new Stack<Node>();
+            Node<T> node = root;
+            while (node != null) {
+                stack.push(node);
+                node = node.left;
+            }
         }
 
         /**
          * Проверка наличия следующего элемента
          * Средняя
          */
+//        Сложность O(1)
+//        Затраты по памяти O(1)
         @Override
         public boolean hasNext() {
-            // TODO
-            throw new NotImplementedError();
+            return !stack.isEmpty();
         }
 
         /**
          * Поиск следующего элемента
          * Средняя
          */
+//        Сложность O(n)
+//        Затраты по памяти O(1)
         @Override
         public T next() {
-            // TODO
-            throw new NotImplementedError();
+            Node<T> node = stack.pop();
+            result = node.value;
+            if (node.right != null) {
+                node = node.right;
+                while (node != null) {
+                    stack.push(node);
+                    node = node.left;
+                }
+            }
+            return result;
         }
 
         /**
          * Удаление следующего элемента
          * Сложная
          */
+//        Сложность - O(высота дерева)
+//        Затраты по памяти - O(1)
         @Override
         public void remove() {
-            // TODO
-            throw new NotImplementedError();
+            BinaryTree.this.remove(result);
         }
     }
 
