@@ -305,6 +305,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             return result;
         }
 
+        
         /**
          * Удаление следующего элемента
          * Сложная
