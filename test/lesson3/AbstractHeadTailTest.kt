@@ -23,6 +23,7 @@ abstract class AbstractHeadTailTest {
         tree.add(3)
         tree.add(6)
 
+
         this.randomTree = create()
         val random = Random()
         for (i in 0 until randomTreeSize) {
@@ -46,6 +47,16 @@ abstract class AbstractHeadTailTest {
         assertEquals(false, set.contains(8))
         assertEquals(false, set.contains(9))
         assertEquals(false, set.contains(10))
+
+        for (i in 11..20) {
+            tree.add(i)
+        }
+
+        assertEquals(false, set.contains(15))
+        assertEquals(false, set.contains(16))
+        assertEquals(false, set.contains(17))
+        assertEquals(false, set.contains(18))
+        assertEquals(false, set.contains(19))
 
 
         set = tree.headSet(127)
@@ -71,6 +82,9 @@ abstract class AbstractHeadTailTest {
         for (i in 1..10)
             assertEquals(true, set.contains(i))
 
+        set = tree.tailSet(30)
+        for (i in 1..10)
+            assertEquals(false, set.contains(i))
     }
 
     protected fun doHeadSetRelationTest() {
@@ -86,6 +100,7 @@ abstract class AbstractHeadTailTest {
         assertFailsWith<IllegalArgumentException> { set.add(8) }
         assertEquals(8, set.size)
         assertEquals(13, tree.size)
+
     }
 
     protected fun doTailSetRelationTest() {
@@ -134,7 +149,7 @@ abstract class AbstractHeadTailTest {
     }
 
     protected fun doSubSetRelationTest() {
-        val set: SortedSet<Int> = tree.subSet(2, 15)
+        var set: SortedSet<Int> = tree.subSet(2, 15)
         assertEquals(9, set.size)
         assertEquals(10, tree.size)
         tree.add(11)
@@ -149,6 +164,16 @@ abstract class AbstractHeadTailTest {
         assertFailsWith<IllegalArgumentException> { set.add(20) }
         assertEquals(11, set.size)
         assertEquals(14, tree.size)
+        tree.remove(1)
+        assertFalse(tree.contains(1))
+        set = tree.subSet(1, 30)
+        tree.add(3)
+        tree.add(18)
+        for (i in 1..20) {
+            tree.add(i)
+            tree.remove(i)
+            assertFalse(tree.contains(i))
+        }
     }
 
 }

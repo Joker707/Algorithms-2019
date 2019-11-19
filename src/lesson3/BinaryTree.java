@@ -305,7 +305,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             return result;
         }
 
-        
+
         /**
          * Удаление следующего элемента
          * Сложная
@@ -340,11 +340,78 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      * Для этой задачи нет тестов (есть только заготовка subSetTest), но её тоже можно решить и их написать
      * Очень сложная
      */
+
+    class subSetTree extends BinaryTree<T> {
+        private BinaryTree<T> tree;
+        private T upperLimit;
+        private T lowerLimit;
+
+        subSetTree(BinaryTree<T> binaryTree, T down, T up) {
+            tree = binaryTree;
+            upperLimit = up;
+            lowerLimit = down;
+        }
+
+
+        private boolean inSubSet(T element) {
+            if (lowerLimit != null && upperLimit != null) {
+                return element.compareTo(lowerLimit) >= 0 && element.compareTo(upperLimit) < 0;
+            } else if (upperLimit != null && element.compareTo(upperLimit) < 0) {
+                return true;
+            } else {
+                return lowerLimit != null && element.compareTo(lowerLimit) >= 0;
+            }
+        }
+
+
+        public boolean add(T element) {
+            if (inSubSet(element)) {
+                tree.add(element);
+                return true;
+            } else {
+                throw new IllegalArgumentException();
+            }
+        }
+
+
+        public boolean contains(Object o) {
+            if (inSubSet((T) o)) {
+                return tree.contains(o);
+            }
+            return false;
+        }
+
+
+        public boolean remove(Object o) {
+            if (contains(o)) {
+                return tree.remove(o);
+            } else {
+                throw new IllegalArgumentException();
+            }
+        }
+
+
+        public int size() {
+            int size = 0;
+            for (T element : tree) {
+                if (inSubSet(element)) {
+                    size++;
+                }
+            }
+            return size;
+        }
+
+
+
+
+
+    }
+
+
     @NotNull
     @Override
     public SortedSet<T> subSet(T fromElement, T toElement) {
-        // TODO
-        throw new NotImplementedError();
+        return new subSetTree(this, fromElement, toElement);
     }
 
     /**
@@ -354,8 +421,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     @NotNull
     @Override
     public SortedSet<T> headSet(T toElement) {
-        // TODO
-        throw new NotImplementedError();
+        return new subSetTree(this, null, toElement);
     }
 
     /**
@@ -365,8 +431,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     @NotNull
     @Override
     public SortedSet<T> tailSet(T fromElement) {
-        // TODO
-        throw new NotImplementedError();
+        return new subSetTree(this, fromElement, null);
     }
 
     @Override

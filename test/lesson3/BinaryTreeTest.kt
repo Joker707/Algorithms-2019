@@ -84,6 +84,22 @@ class BinaryTreeTest {
                 "After removal of $toRemove from $list binary tree height increased"
             )
         }
+        val tree = create()
+        tree.add(10)
+        tree.add(20)
+        tree.add(25)
+        tree.add(15)
+        assertTrue(tree.remove(10))
+        assertFalse(tree.remove(27))
+        for (i in 1..30) {
+            tree.add(random.nextInt(100))
+        }
+        assertTrue(tree.remove(20))
+        val size = tree.size
+        tree.remove(15)
+        tree.remove(20)
+        tree.remove(25)
+        assertEquals(size - 3, tree.size)
     }
 
     @Test
