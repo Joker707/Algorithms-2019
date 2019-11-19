@@ -75,7 +75,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      * Средняя
      */
     //Затраты по памяти-O(1)
-    //Трудоёмкость-O(высота дерева)
+    //Трудоёмкость-O(height)
     @Override
     public boolean remove(Object o) {
         @SuppressWarnings("unchecked")
@@ -289,7 +289,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          * Поиск следующего элемента
          * Средняя
          */
-//        Сложность O(n)
+//        Сложность O(n) , где n - количество узлов дерева
 //        Затраты по памяти O(1)
         @Override
         public T next() {
@@ -310,7 +310,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          * Удаление следующего элемента
          * Сложная
          */
-//        Сложность - O(высота дерева)
+//        Сложность - O(height)
 //        Затраты по памяти - O(1)
         @Override
         public void remove() {
@@ -407,7 +407,8 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
 
     }
 
-
+    //        Сложность - O(n)
+    //        Затраты по памяти - O(logn) , где n - количество узлов дерева
     @NotNull
     @Override
     public SortedSet<T> subSet(T fromElement, T toElement) {
@@ -418,6 +419,8 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      * Найти множество всех элементов меньше заданного
      * Сложная
      */
+    //        Сложность - O(n)
+    //        Затраты по памяти - O(logn) , где n - количество узлов дерева
     @NotNull
     @Override
     public SortedSet<T> headSet(T toElement) {
@@ -428,6 +431,8 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      * Найти множество всех элементов больше или равных заданного
      * Сложная
      */
+    //        Сложность - O(n)
+    //        Затраты по памяти - O(logn) , где n - количество узлов дерева
     @NotNull
     @Override
     public SortedSet<T> tailSet(T fromElement) {
