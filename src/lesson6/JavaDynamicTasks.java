@@ -2,6 +2,7 @@ package lesson6;
 
 import kotlin.NotImplementedError;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -39,21 +40,16 @@ public class JavaDynamicTasks {
         int sl = second.length();
 
         while (fl != 0 && sl != 0) {
-            if (first.charAt(fl - 1) == second.charAt(fl - 1)) {
+            if (first.charAt(fl - 1) == second.charAt(sl - 1)) {
                 result.append(first.charAt(fl - 1));
                 fl--;
                 sl--;
             }
-            else {
-                if (table[fl][sl - 1] > table[fl - 1][fl]) {
-                    sl--;
-                }
-                else if (table[fl][sl - 1] < table[fl - 1][sl]) {
-                    fl--;
-                } else {
-                    fl--;
-                }
-            }
+            else
+            if (table[fl][sl - 1] > table[fl - 1][sl]) sl--;
+            else
+            if (table[fl][sl - 1] < table[fl - 1][sl]) fl--;
+            else fl--;
         }
 
         return result.reverse().toString();
@@ -70,9 +66,50 @@ public class JavaDynamicTasks {
      * Если самых длинных возрастающих подпоследовательностей несколько (как в примере),
      * то вернуть ту, в которой числа расположены раньше (приоритет имеют первые числа).
      * В примере ответами являются 2, 8, 9, 12 или 2, 5, 9, 12 -- выбираем первую из них.
+     *
+     * Сложность O(list.size * (list.size + 1) / 2)
+     * Затраты по памяти O(list.size)
+     *
      */
     public static List<Integer> longestIncreasingSubSequence(List<Integer> list) {
-        throw new NotImplementedError();
+
+        if (list.size() == 0 || list.size() == 1) {
+            return list;
+        }
+
+        int max = 0;
+
+        int[] size = new int[list.size()];
+        int[] index = new int[list.size()];
+
+        for (int i = 0; i < list.size(); ++i) {
+            size[i] = 1;
+            index[i] = -1;
+            for (int j = 0; j < i; ++j) {
+                if (list.get(j) < list.get(i)) {
+                    if (1 + size[j] > size[i]) {
+                        size[i] = 1 + size[j];
+                        index[i] = j;
+                        if (size[max] < size[i]) {
+                            max = i;
+                        }
+                    }
+                }
+            }
+        }
+        int count = size[max];
+        int[] result = new int[count];
+        int i = max;
+        while (i != -1) {
+            result[--count] = list.get(i);
+            i = index[i];
+        }
+        List answer = new ArrayList<Integer>();
+        for (int resultPart : result) {
+            answer.add(resultPart);
+        }
+        return answer;
+
     }
 
     /**
